@@ -1,4 +1,5 @@
-  int size = 20; //default size
+class Bullet {
+int size = 20; //default size
   //PVector dir = new PVector(0, 0);
   //PVector pos ;
   //PVector pos2 ;
@@ -84,4 +85,5 @@
  //  bfired = true;
  //  shoot();
  //}
+}
 }
