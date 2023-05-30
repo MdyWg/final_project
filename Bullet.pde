@@ -1,29 +1,41 @@
 class Bullet {
-  private int bulletx;
-  private int bullety;
-  private boolean bfired;
-  ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-  public Bullet(int x, int y, int size) {
-    bulletx = x;
-    bullety = y;
+  //private int bulletx;
+  //private int bullety;
+  private int size;
+  private PVector pos;
+  
+  ArrayList<PVector> bulletpos = new ArrayList<PVector>();
+  public Bullet(float x, float y, int size) {
+    pos.x = x;
+    pos.y = y;
     this.size = size;
   }
-  int getbx(){
-    return bulletx;
+  public Bullet(int size) {
+    this.size = size;
+    
   }
-  int getby() {
-    return bullety;
-  }
-  void drawBullets() {
-    for (Bullet b: bullets) {
-      rect(b.getbx(), b.getby(), size/4, size) 
+  //int getbx(){
+  //  return bulletx;
+  //}
+  //int getby() {
+  //  return bullety;
+  //}
+   void drawBullets() {
+    for (PVector b: bulletpos) {
+      fill(255);
+      rect(b.x,b.y, size/4, size);
     }
   }
-  void updateBullets() {
-    while (bullets.size() > 0) {
-      bullets.remove(0);
+    void updateBullets() {
+    //while (bullets.size() > 0) {
+    //  bullets.remove(0);
+    //}
+    if (bulletpos.get(0).y <= 5) {
+      bulletpos.remove(0);
     }
-    bullety -= size; 
+    for (PVector b: bulletpos) {
+       b.y -= size; 
+    }
   }
   
 }
