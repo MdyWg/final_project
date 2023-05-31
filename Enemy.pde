@@ -3,6 +3,8 @@ class Enemy {
   private int y; 
   private int size;
   private int speed;
+  private ArrayList<Bullet> battack1;
+  private int capacity;
 
 
   public Enemy(int x, int y, int size) {
@@ -34,6 +36,11 @@ class Enemy {
       count++;
       return false;
     }
+  }
+  
+  void attack1() {
+    for (int i = 0; i < capacity; i++) {
+      //battack1.add(new Bullet());
   }
   
 }
