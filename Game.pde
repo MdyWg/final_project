@@ -1,90 +1,123 @@
-  public int size = 20; //default size
-  PVector dir = new PVector(0, 0);
-  //PVector pos ;
-  //PVector pos2 ;
-  //PVector pos3;
-  Player player;
-  Bullet bullet;
-  ArrayList<PVector> bulletpos = new ArrayList<PVector>();
-  void setup() {
-    size(600, 900);
-    //pos = new PVector( (width/2) - (size/2), height- (size));
-    //pos2 = new PVector( (width/2) + (size / 2), height - (size));
-    //pos3 = new PVector( width/2, height - (2 * size));
-    player = new Player((width/2) - (size/2),  (height - (2 * size)), size);
-    bullet = new Bullet(size);
-    //bulletx = posx;
-    //bullety = posy - size;
+public class Game {
+Player player;
+ArrayList<Bullet> bullets;
+ArrayList<Enemy> enemies;
+//Bullet bullet;
+int size = 30;
+int spawnTime = 200;
+int count = spawnTime;
+void setup() {
+  size(800, 900);
+  background(0);
+  player = new Player(width/2, height- size * 2, size);
+  bullets = new ArrayList<Bullet>();
+  enemies = new ArrayList<Enemy>();
+  //bullet = new Bullet(width/2, height - size * 2, size);
+}
+void draw() {
+  background(0);
+  player.drawPlayer();
+    player.move();
+  for (Bullet b: bullets) {
+     b.drawBullet();
+     b.updateBullet();
+     b.shouldRemove();
   }
-  void draw() {
-    background(0);
-    player.updatePlayer();
-    bullet.drawBullets();
-    bullet.updateBullets();
-    // if (bulletpos.get(0).y <= 5) {
-    //  bulletpos.remove(0);
-    //}
-    //for (PVector b: bulletpos) {
-    //   b.y -= size ;
-    //}
+  if (count == spawnTime ) {
+    enemies.add(new Enemy(int(random(0, width - size)), 0, size));
+    count = 0;
+  } else {
+    count++;
   }
-    //println(bullety);
+  for (Enemy e: enemies) {
+    e.drawEnemy();
+    e.updateEnemy();
+  }
+  for (int i = 0; i < enemies.size() - 1; i++) {
+    Enemy e= enemies.get(i);
+    if (e.getY() > height || collide()) {
+      enemies.remove(e);
+      break;
+    }
+  }
+  for (int i = bullets.size() - 1; i > -1; i--) {
+    Bullet b = bullets.get(i);
+   if (b.getremove() || collide()) {
+      bullets.remove(i);
+    }
+  }
+  //if (waitenemy ==5) {
     
-    //triangle(pos.x, pos.y, pos2.x, pos2.y, pos3.x, pos3.y);
-    //pos.x += size * dir.x;
-    //pos.y += size * dir.y;
-    //pos2.x += size * dir.x;
-    //pos2.y += size * dir.y;
-    //pos3.x += size * dir.x;
-    //pos3.y += size *t dir.y;
-    
-  
-  
-  
-  void keyPressed() {
-  if (keyCode == UP) {
-   dir = new PVector(0, -1);
-  // posy -= 5;
- } else if (keyCode == DOWN) {
-   dir = new PVector(0, 1);
-   //posy += 5;
- } else if (keyCode == LEFT) {
-   dir = new PVector(-1, 0);
-   //posx -= 5;
- } else if (keyCode == RIGHT) {
-   dir = new PVector(1, 0);
-   //posx += 5;
- } else if (key == 'j') {
-   player.shoot();
- }
+  //}
 }
 
-  
-  
-  //void newBullet() {
-  //  fill(123);
-  //  //bulletx = posx;
-  //  //bullety = posy;
-  //  if (!bfired) {
-  //    bulletx = posx;
-  //    bullety = posy;
-  //    bfired = true;
-  //  } else {
-  //    bulletx = posx;
-  //    bullety -= size;
-  //    if (bullety <= 5) {
-  //      bfired = false;
-  //  }
-  //  }
-  //  rect(bulletx, bullety, size/4, size);
-  //}
-  ////void shoot() {
-  //  while(bullety > 0) {
-  //  bulletx = posx;
-  //  bullety -= size;
-  //  }
-  //}
+boolean collide() {
+  for (Enemy e: enemies) {
+  for (Bullet b: bullets) {
+    if (b.getX() >= e.getX() && b.getX() <= e.getX() + size && b.getY() < e.getY() + size && b.getY() > e.getY()) {
+      println(b.getY());
+      return true;
+    }
+  }
+  }
+  return false;
+}
 
- //} else if (key == 'j') {
- //  shoot();
- //}
+  void keyPressed() {
+  if (keyCode == UP) {
+   //dir = new PVector(0, -1);
+    //player.y -= 5;
+    player.up = true;
+ } 
+ if (keyCode == DOWN) {
+   //dir = new PVector(0, 1);
+   //player.y += 5;
+   player.down = true;
+ }
+ if (keyCode == LEFT) {
+   //dir = new PVector(-1, 0);
+  // player.x -= 5;
+  player.left = true;
+ } 
+ if (keyCode == RIGHT) {
+   //dir = new PVector(1, 0);
+   //player.x += 5;
+   player.right = true;
+ } 
+ if (key == 'j') {
+    if (player.canShoot) {
+      bullets.add(new Bullet(player.getX(), player.getY(), size));
+      player.waitShoot = 0;
+      player.canShoot = false;
+    } else {
+      player.waitShoot++;
+      if (player.waitShoot == 7) {
+        player.canShoot = true;
+      }
+    }
+   //player.shoot();
+ }
+}
+  void keyReleased() {
+  if (keyCode == UP) {
+   //dir = new PVector(0, -1);
+    //player.y -= 5;
+    player.up = false;
+ } 
+ if (keyCode == DOWN) {
+   //dir = new PVector(0, 1);
+   //player.y += 5;
+   player.down = false;
+ }
+ if (keyCode == LEFT) {
+   //dir = new PVector(-1, 0);
+  // player.x -= 5;
+  player.left = false;
+ } 
+ if (keyCode == RIGHT) {
+   //dir = new PVector(1, 0);
+   //player.x += 5;
+   player.right =false;
+ } 
+}
+}
