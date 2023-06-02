@@ -6,6 +6,8 @@ ArrayList<Enemy> enemies;
 int size = 30;
 int spawnTime = 200;
 int count = spawnTime;
+int attackTime = 3; 
+int count2 = 0;
 void setup() {
   size(800, 900);
   background(0);
@@ -31,7 +33,19 @@ void draw() {
   }
   for (Enemy e: enemies) {
     e.drawEnemy();
+    if (count2 == attackTime) {
+      count2 = 0;
+      for (int i = 0; i < e.capacity; i++) {
+        e.battack1.add(new Bullet(e.getX() + i* 100, e.getY() + i* 100, size));
+      }
+      e.attack1();
+    } else {
+     if (e.getActive()) {
+       e.updateattack1();
+     }
     e.updateEnemy();
+    count2++;
+    }
   }
   for (int i = 0; i < enemies.size() - 1; i++) {
     Enemy e= enemies.get(i);
@@ -55,7 +69,6 @@ boolean collide() {
   for (Enemy e: enemies) {
   for (Bullet b: bullets) {
     if (b.getX() >= e.getX() && b.getX() <= e.getX() + size && b.getY() < e.getY() + size && b.getY() > e.getY()) {
-      println(b.getY());
       return true;
     }
   }
