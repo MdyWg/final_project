@@ -1,14 +1,15 @@
-public class Game {
 Player player;
 ArrayList<Bullet> bullets;
 ArrayList<Enemy> enemies;
+ArrayList<EnemyBullet> battack1move;
 //Bullet bullet;
 int size = 30;
-int spawnTime = 300;
+int spawnTime = 200;
 int count = spawnTime;
 //boolean firstappear = true;
-int attackTime = 3; 
+int attackTime = 50; 
 int attackcount = 0;
+int c = 0;
 //int capacity = 3;
 void setup() {
   size(800, 900);
@@ -30,7 +31,6 @@ void draw() {
   for (Bullet b: bullets) {
      b.drawBullet();
      b.updateBullet();
-     b.shouldRemove();
 
   }
 
@@ -47,89 +47,120 @@ void draw() {
     e.drawEnemy();
       if (attackcount == attackTime) {
          attackcount = 0;
+         e.active = true;
         load();
-        e.attack1();
-      //e.active = false;
-    
-      //println(e.battack1.get(0).dirx);
-
-      //for (int i = 0; i < e.bulletcapacity; i++) {
-      //  //e.battack1.add(new EnemyBullet(e.getX() + size + ((i + 1)* 100), e.getY() + size + ((i + 1)* 100)));
-      //  e.battack1.add(new EnemyBullet(e.getX() + size + 50, e.getY() + size , size/2));
-      //}
-    //} else {
-    //  e.updateEnemy();
-    //  attackcount++;
-    //}
+        e.displayload();
   } else {
-    e.updateattack1();
-    e.attack1();
-    e.updateEnemy();
-  }
-  }
-  attackcount++;
-  //firstappear = false;
-  for (int i = 0; i < enemies.size() - 1; i++) {
-    Enemy e= enemies.get(i);
-    //println(e);
-    if (e.getY() > height || collide()) {
-      enemies.remove(e);
+    if (e.active) {
+      e.updateattack1();
+      e.displayattack1();
     }
+   e.updateEnemy();
+   attackcount++;
   }
-  for (int i = bullets.size() - 1; i > -1; i--) {
-    Bullet b = bullets.get(i);
-   if (b.getremove() || collide()) {
-      bullets.remove(i);
-    }
   }
-  playercollide();
-  if (player.life <= 0) {
-    //gameover screen
+  for (int i = 0; i < enemies.size(); i++) {
+    //Enemy e = enemies.get(i);
+    for (int j = 0; j < bullets.size(); j++) {
+      //Bullet b = bullets.get(j);
+      if  (enemycollide(bullets.get(j), enemies.get(i))) {
+          //println(enemycollide(bullets.get(j), enemies.get(i)));
+          enemies.remove(i);     
+          bullets.remove(j);
+      } else {
+        if (bullets.get(j).getY() < 0) {
+           bullets.remove(j);
+      }
+          if (enemies.get(i).getY() > height) {
+            player.life--;
+            enemies.remove(i);
+            while (enemies.get(i).battack1.size() > 0) {
+              enemies.get(i).battack1.remove(0);
+            }
+        }
+      }
   }
-
-  //if (waitenemy ==5) {
-    
+  }
+  //for (int i = 0; i < enemies.size() - 1; i++) {
+  //  Enemy e= enemies.get(i);
+  //  //println(e);
+  //  if (e.getY() > height || enemycollide()) {
+  //    enemies.remove(e);
+  //  }
   //}
+  //for (int i = bullets.size() - 1; i > -1; i--) {
+  //  Bullet b = bullets.get(i);
+  // if (b.getremove() || enemycollide()) {
+  //    bullets.remove(i);
+  //  }
+  //}
+  //if (player.life <= 0) {
+  //  //gameover screen
+  //}
+
 }
 
-boolean collide() {
-  for (Enemy e: enemies) {
-  for (Bullet b: bullets) {
-    if (b.getX() >= e.getX() && b.getX() <= e.getX() + size && b.getY() < e.getY() + size && b.getY() > e.getY()) {
+
+boolean enemycollide(Bullet b, Enemy e) {
+  if (b.getX() >= e.getX() && b.getX() <= e.getX() + size && b.getY() < e.getY() + size && b.getY() > e.getY()) {
       return true;
     }
-  }
-  }
   return false;
 }
 
-void playercollide() {
-  for (Enemy e: enemies) {
-  for (EnemyBullet b: e.battack1) {
-    if (b.pos.x >= player.getX() && b.pos.x <= player.getX() + size && b.pos.y < player.getY() + size && b.pos.y > player.getY()) {
-      player.life--;
-    }
-  }
-  }
+boolean playercollide(EnemyBullet b) {
+      if (b.pos.x >= player.getX() && b.pos.x <= player.getX() + size && b.pos.y < player.getY() + size && b.pos.y > player.getY()) {
+         return true;
+      }
+      return false;
 }
+//void enemybulletmove() {
+//  for (Enemy e: enemies) {
+//  for (EnemyBullet b: e.battack1move) {
+//     else if (e.bulletOffScreen()) {
+//      e.battack1move.remove(b);
+//    }
+//    else {
+//      e.updateattack1();
+//      e.attack1move();
+//    }
+//  }
+//  }
+//}
 void load() {
 
   for (Enemy e: enemies) {
-   while (e.battack1.size() > 0) {
-          e.battack1.remove(0);
-   }
-      e.battack1.add(new EnemyBullet(e.getX() + size + 50, e.getY(), size/ 2));
-      e.battack1.get(0).diry = 0;    
-      e.battack1.get(0).dirx = 1;
-      e.battack1.add(new EnemyBullet(e.getX() - 50, e.getY(), size / 2));
-      e.battack1.get(1).diry = 0;
-      e.battack1.get(1).dirx = -1;
+   //while (e.battack1.size() > 0) {
+   //       e.battack1.remove(0);
+   //}
+      e.battack1.add( new EnemyBullet(e.getX() + size + 50, e.getY(), size/ 2));
       e.battack1. add(new EnemyBullet(e.getX() + size + 25, e.getY() + size + 25, size / 2));
-      e.battack1.get(2).dirx = 1;
-      e.battack1.get(2).diry = 1;
       e.battack1. add(new EnemyBullet(e.getX() - 25, e.getY() + size + 25, size / 2));
-      e.battack1.get(3).dirx = -1;
-      e.battack1.get(3).diry = 1;
+      e.battack1.add(new EnemyBullet(e.getX() - 50, e.getY(), size / 2));
+     
+      while (e.battack1.size() >0) {
+        EnemyBullet bullet = e.battack1.remove(0);
+        e.battack1move.add(bullet);
+        if (c == 0) {
+          e.battack1move.get(e.battack1move.size() - 1).diry = 0;
+          e.battack1move.get(e.battack1move.size() - 1).dirx = 1;
+        } else if (c == 1) {
+          e.battack1move.get(e.battack1move.size() - 1).diry = 1;
+          e.battack1move.get(e.battack1move.size() - 1).dirx = 1;
+      } else if (c == 2) {
+         e.battack1move.get(e.battack1move.size() - 1).diry = 1;
+         e.battack1move.get(e.battack1move.size() - 1).dirx = -1;
+      } else {
+         e.battack1move.get(e.battack1move.size() - 1).diry = 0;
+         e.battack1move.get(e.battack1move.size() - 1).dirx = -1;
+      }
+      if (c == 3) {
+        c = 0;
+      } else {
+        c++;
+      }
+      }
+      
   }
 }
 
@@ -189,5 +220,4 @@ void load() {
    //player.x += 5;
    player.right =false;
  } 
-}
 }
