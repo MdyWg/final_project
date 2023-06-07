@@ -3,7 +3,11 @@ class Enemy {
   private int y; 
   private int size;
   private int speed;
-  private ArrayList<EnemyBullet> battack1;
+  ArrayList<EnemyBullet> battack1;
+  ArrayList<EnemyBullet> battack1move;
+ // int bulletcapacity= 10;
+  boolean active = false;
+ // private int offcount = 0;
 
 
   public Enemy(int x, int y, int size) {
@@ -11,7 +15,9 @@ class Enemy {
     this.y = y;
     this.size = size;
     speed = 1;
-    battack1 = new ArrayList<Bullet>();
+    battack1 = new ArrayList<EnemyBullet>();
+    battack1move = new ArrayList<EnemyBullet>();
+    //battack1dead = new ArrayList<EnemyBullet>();
   }
    int getX() {
     return x;
@@ -19,9 +25,7 @@ class Enemy {
   int getY() {
     return y;
   }
-  boolean getActive() {
-    return active;
-  }
+
   void drawEnemy() {
     fill(252, 0, 30);
     square(x, y, size);
@@ -40,32 +44,63 @@ class Enemy {
       return false;
     }
   }
- void attack1() {
-    for (Bullet b: battack1) {
+  
+ 
+  void displayload() {
+    for (EnemyBullet b: battack1) {
       b.drawBullet();
+      //translate(5, 5);
     }
   
 }
+  void displayattack1() {
+    for (EnemyBullet b: battack1move) {
+      b.drawBullet();
+    }
+  }
   void updateattack1() {
-   for (EnemyBullet b: battack1) {
-       
-        b.pos.x += 5 * b.dirx;
-        b.pos.y += 5 * b.diry;
-     }
- //boolean allOff() {
- //   for (EnemyBullet b: battack1) {
- //     if (b.pos.x < 0 || b.pos.x > 900 || b.pos.y < 0 || b.pos.y > 900) {
- //       offcount++;
- //     }
- //   }
- //   if (offcount == 4){
- //     return true;
- //   }
- //   return false;
- // }
+  //   active = true;
+    //for (int i = 0; i < battack1move.size(); i++) {
+    //  if (i % 4 == 0) {
+    //      battack1move.get(i).diry = 0;
+    //      battack1move.get(i).dirx = 1;
+    //  } else if (i % 4 == 1) {
+    //    battack1move.get(i).diry = 0;
+    //    battack1move.get(i).dirx = -1;
+    //  } else if (i % 4 == 2) {
+    //    battack1move.get(i).dirx = 1;
+    //    battack1move.get(i).diry = 1;
+    //  } else {
+    //    battack1move.get(i).dirx = -1;
+    //    battack1move.get(i).diry = 1;
+    //  }
+    //}
 
-     //while (battack1.size() > 0) {
-     //  battack1.remove(0);
+    for (int i = 0; i < battack1move.size(); i++) {
+      if (bulletOffScreen(battack1move.get(i))) {
+        battack1move.remove(i);
+        println(battack1move.size());
+      } 
+    }
+    for (int i = 0; i < battack1move.size(); i++) {
+      battack1move.get(i).updateBullet1();
+    }
+
+    
+     //for (EnemyBullet b: battack1) {
+       
+     //   b.pos.x += 5 * b.dirx;
+     //   b.pos.y += 5 * b.diry;
      //}
+  }
+  boolean bulletOffScreen(EnemyBullet b) {
+    if (b.pos.x < 0 || b.pos.x > 900 || b.pos.y < 0 || b.pos.y > 900) {
+      return true;
+    }
+  return false;
+  }
   
-}
+
+  }
+
+  
