@@ -3,7 +3,7 @@
   private int size;
   private int speed = 2;
   private int dir = 1;
-  private int life = 30;
+  private int life = 100;
   ArrayList<BossBullet> attack1;
   ArrayList<BossBullet> attack21;
   ArrayList<BossBullet> attack22;
