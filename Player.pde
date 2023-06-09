@@ -10,7 +10,7 @@ public class Player {
   boolean up; 
   boolean down;
   private int speed;
-  int life = 1000;
+  int life = 3;
   private boolean immune = false;
  // private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
   public Player(int x, int y, int size){
