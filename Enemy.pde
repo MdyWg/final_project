@@ -49,7 +49,6 @@ class Enemy {
   void displayload() {
     for (EnemyBullet b: battack1) {
       b.drawBullet();
-      //translate(5, 5);
     }
   
 }
@@ -59,46 +58,19 @@ class Enemy {
     }
   }
   void updateattack1() {
-  //   active = true;
-    //for (int i = 0; i < battack1move.size(); i++) {
-    //  if (i % 4 == 0) {
-    //      battack1move.get(i).diry = 0;
-    //      battack1move.get(i).dirx = 1;
-    //  } else if (i % 4 == 1) {
-    //    battack1move.get(i).diry = 0;
-    //    battack1move.get(i).dirx = -1;
-    //  } else if (i % 4 == 2) {
-    //    battack1move.get(i).dirx = 1;
-    //    battack1move.get(i).diry = 1;
-    //  } else {
-    //    battack1move.get(i).dirx = -1;
-    //    battack1move.get(i).diry = 1;
-    //  }
-    //}
 
     for (int i = 0; i < battack1move.size(); i++) {
-      if (bulletOffScreen(battack1move.get(i))) {
+      if (battack1move.get(i).bulletOffScreen()) {
         battack1move.remove(i);
-        println(battack1move.size());
       } 
     }
     for (int i = 0; i < battack1move.size(); i++) {
-      battack1move.get(i).updateBullet1();
+        battack1move.get(i).updateBullet1();
     }
 
-    
-     //for (EnemyBullet b: battack1) {
-       
-     //   b.pos.x += 5 * b.dirx;
-     //   b.pos.y += 5 * b.diry;
-     //}
+
   }
-  boolean bulletOffScreen(EnemyBullet b) {
-    if (b.pos.x < 0 || b.pos.x > 900 || b.pos.y < 0 || b.pos.y > 900) {
-      return true;
-    }
-  return false;
-  }
+
   
 
   }
