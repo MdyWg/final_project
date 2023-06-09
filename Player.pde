@@ -2,7 +2,7 @@ public class Player {
  // private PVector pos;
  private int x;
  private int y;
-  private int size; 
+ private int size; 
  int waitShoot;
   boolean canShoot = true;
   boolean left;
@@ -10,6 +10,8 @@ public class Player {
   boolean up; 
   boolean down;
   private int speed;
+  int life = 1000;
+  private boolean immune = false;
  // private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
   public Player(int x, int y, int size){
   //  pos = new PVector(x, y);
@@ -29,7 +31,11 @@ public class Player {
     return y;
   }
   void drawPlayer() {
+    if (immune) {
+      fill(255,248,116);
+    } else {
     fill(255);
+    }
     square(x, y, size);
   }
  
@@ -47,14 +53,4 @@ public class Player {
       y += speed;
     }
   }
-  
-  //void shoot() {
-  //  Bullet bullet = new Bullet(int(pos.x), int(pos.y), size);
-  //  bullets.add(bullet);
-  //}
-  //void drawBullets() {
-  //  for (Bullet b: bullets) {
-  //    b.drawBullet();
-  //  }
-  //}
 }
