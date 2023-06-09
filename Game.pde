@@ -19,6 +19,7 @@ int bossTimer = 0;
 float a; 
 float a2;
 int attack2time = 0;
+boolean s = false;
 
 void setup() {
   size(800, 900);
@@ -75,16 +76,12 @@ void draw() {
   }
   }
   for (int i = 0; i < enemies.size(); i++) {
-    //Enemy e = enemies.get(i);
     for (int j = 0; j < bullets.size(); j++) {
-      //Bullet b = bullets.get(j);
       if  (enemycollide(bullets.get(j), enemies.get(i))) {
-          //println(enemycollide(bullets.get(j), enemies.get(i)));
           Enemy e = enemies.remove(i);  
           if (i > 0) {
             i--;
           }
-          println("removed enemy" + e);
           while (e.battack1move.size() > 0) {
             EnemyBullet eb = e.battack1move.remove(0);
             battack1dead.add(eb);
@@ -97,7 +94,6 @@ void draw() {
         }
       }
      if (enemies.size() > 0){
-       println(enemies.size());
       for (int k = 0; k < enemies.get(i).battack1move.size(); k++) {
         if (playerCollideEBullet(enemies.get(i).battack1move.get(k))){
           if (!player.immune) {
@@ -199,7 +195,6 @@ void draw() {
      }
     }
      for (int j = 0; j < bullets.size(); j++) {
-       println(bosscollide(bullets.get(j)));
         if (bosscollide(bullets.get(j))) {
           if (!boss.immune) {
              boss.life--;
@@ -222,7 +217,11 @@ void draw() {
    immunecount--;
     wavetime++;    
   } else {
+    if (s) {
+      settingscreen();
+    } else {
     startScreen();
+  }
   }
   
 }
@@ -232,7 +231,29 @@ void startScreen() {
   textSize(50);
   fill(255);
   text("press space to start" , width/ 4, height/2);
+  textSize(25);
+  text("press s for settings", width/3, height - 10);
   
+}
+
+void settingscreen() {
+  fill (125, 125, 125);
+  rect(width/4, height/4, width/2, height/2);
+  fill(0);
+  textSize(50);
+  text("settings", width/4 + width/8, height/4 + 50);
+  textSize(25);
+  text("player life: " + player.life, width/4 + 10, height/4 + 150);
+  text("boss life: " + boss.life, width/4 + 10, height/4 + 250);
+  text("-", width/4 + 210, height/4 + 145, 25);
+  text("+", width/4 + 255, height/4 + 145, 25);
+  text("-", width/4 + 160, height/4 + 245, 25);
+  text("+", width/4 + 205, height/4 + 245, 25);
+  noFill();
+  square(width/4 + 200, height/4 + 125, 25);
+  square(width/4 + 250, height/4 + 125, 25);
+  square(width/4 + 150, height/4 + 225, 25);
+  square(width/4 + 200, height/4 + 225, 25);
 }
 
 void incoming() {
@@ -409,6 +430,18 @@ void loseLife() {
   player.immune = true;
 }
 
+void mousePressed() {
+  if (mouseX >= width/4 + 200 && mouseX <= width/4 + 225 && mouseY >= height/4 + 125 && mouseY <= height/4 + 150) {
+    player.life--;
+  } else if (mouseX>= width/4 + 150 && mouseX <= width/4 + 175 && mouseY >= height/4 + 225 && mouseY <= height/4 + 250) {
+    boss.life--;
+  } else if  (mouseX>= width/4 + 250 && mouseX <= width/4 + 275 && mouseY >= height/4 + 125 && mouseY <= height/4 + 150) {
+    player.life++;
+  } else if  (mouseX>= width/4 + 200 && mouseX <= width/4 + 225 && mouseY >= height/4 + 225 && mouseY <= height/4 + 250) {
+    boss.life++;
+  }
+
+}
   void keyPressed() {
   if (keyCode == UP) {
    //dir = new PVector(0, -1);
@@ -444,6 +477,12 @@ void loseLife() {
  }
  if (key == ' ') {
    started = true;
+ }
+ if (key == 's') {
+   s = true;
+ }
+ if (key == 'e') {
+   s = false;
  }
 }
   void keyReleased() {
