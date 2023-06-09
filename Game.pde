@@ -105,9 +105,6 @@ void draw() {
         if (enemies.get(i).getY() > height) {
           player.life--;
             enemies.remove(i);
-        //while (enemies.get(i).battack1.size() > 0) {
-        //      enemies.get(i).battack1.remove(0);
-        //}
     }
     if (playerCollideEnemy(enemies.get(i))) {
       if (!player.immune) {
@@ -245,6 +242,7 @@ void settingscreen() {
   textSize(25);
   text("player life: " + player.life, width/4 + 10, height/4 + 150);
   text("boss life: " + boss.life, width/4 + 10, height/4 + 250);
+  text("press e to exit", width/4 + width/8, height/4 + height/2 - 20);
   text("-", width/4 + 210, height/4 + 145, 25);
   text("+", width/4 + 255, height/4 + 145, 25);
   text("-", width/4 + 160, height/4 + 245, 25);
